@@ -1,0 +1,13 @@
+Package: semScreenR
+Type: Package
+Title: Deterministic Screening and Validation for SEM
+Version: 0.3.1
+Authors@R: c(person(given = "Your", family = "Name", role = c("aut","cre"), email = "you@example.com"))
+Description: Rule-based, cross-validated screening workflow for Structural Equation Modeling (SEM)
+    with audit trails, caps on removal, careless-responding detection, and APA-style reporting.
+License: MIT + file LICENSE
+Depends: R (>= 4.1)
+Imports: stats, utils
+Suggests: lavaan, semPlot, gt, knitr, rmarkdown, testthat (>= 3.0.0)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
