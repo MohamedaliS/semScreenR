@@ -1,0 +1,45 @@
+---
+title: "semScreenR: Deterministic Screening and Validation for SEM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{semScreenR: Deterministic Screening}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Overview
+
+This vignette demonstrates the semScreenR workflow with ethical guardrails, pre/post reporting, and optional careless-responding screening.
+
+## Example
+
+```{r}
+library(semScreenR)
+library(lavaan)
+data("HolzingerSwineford1939", package = "lavaan")
+dat <- HolzingerSwineford1939
+
+model <- '
+  visual  =~ x1 + x2 + x3
+  textual =~ x4 + x5 + x6
+  speed   =~ x7 + x8 + x9
+'
+
+cfg  <- triage_rules("balanced")
+plan <- triage_plan(dat, model, id_cols = "id", config = cfg)
+res  <- triage_apply(dat, model, plan)
+
+sem_compare_table(dat, model, res)
+```
+
+### Careless responding (optional)
+
+```{r}
+items <- paste0("x", 1:9)
+sig <- careless_signals(dat, items = items)
+head(sig)
+```
