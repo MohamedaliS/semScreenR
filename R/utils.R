@@ -180,7 +180,11 @@ apa_fit_table <- function(pre, post) {
     ))
   }
 
-  fits <- list("Pre-screening" = pre, "Post-screening" = post)
+  # Only include post if valid
+  fits <- list("Pre-screening" = pre)
+  if (length(post) > 0 && is_valid_fit(post)) {
+    fits[["Post-screening"]] <- post
+  }
   
   # Define measures to extract
   measures <- c("cfi", "tli", "rmsea", "srmr", "aic", "bic", "chisq", "df", "pvalue", "npar", "nobs")
