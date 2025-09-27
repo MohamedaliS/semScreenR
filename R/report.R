@@ -126,8 +126,8 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
     "</div>",
     
     "<hr>",
-    "<p><small>Generated on ", Sys.time(), " using semScreenR version ", 
-    utils::packageVersion("semScreenR") %||% "unknown", "</small></p>",
+    paste0("<p><small>Generated on ", as.character(Sys.time()), " using semScreenR version ", 
+           as.character(utils::packageVersion("semScreenR") %||% "unknown"), "</small></p>"),
     
     "</body></html>"
   )
