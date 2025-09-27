@@ -2,12 +2,10 @@ Package: semScreenR
 Type: Package
 Title: Deterministic Screening and Validation for SEM
 Version: 0.0.1
-Authors@R: c(
-    person(given = "Mohamed Ali", family = "S", role = c("aut","cre"), email = "you@example.com")
-)
-Description: Rule-based, cross‑validated screening workflow for Structural Equation
+Authors@R: c(person(given = "Mohamed Ali", family = "S", role = c("aut","cre"), email = "you@example.com"))
+Description: Rule-based, cross-validated screening workflow for Structural Equation
     Modeling (SEM). Provides audit trails, caps on row/item removal, careless
-    responding detection, and APA‑style reporting.
+    responding detection, and APA-style reporting.
 License: MIT + file LICENSE
 URL: https://github.com/MohamedaliS/semScreenR
 BugReports: https://github.com/MohamedaliS/semScreenR/issues
