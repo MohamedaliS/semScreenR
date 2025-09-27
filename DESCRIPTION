@@ -2,33 +2,18 @@ Package: semScreenR
 Type: Package
 Title: Deterministic Screening and Validation for SEM
 Version: 0.0.1
-Authors@R: c(person(given = "Your", family = "Name", role = c("aut","cre"), email = "you@example.com"))
-Description: Rule-based, cross-validated screening workflow for Structural Equation Modeling (SEM).
-    Provides deterministic, reproducible methods for identifying and removing problematic 
-    indicators and cases while maintaining theoretical integrity through validation gates 
-    and ethical safeguards. Includes careless-responding detection, k-fold validation,
-    and comprehensive reporting capabilities.
+Authors@R: c(
+    person(given = "Mohamed Ali", family = "S", role = c("aut","cre"), email = "you@example.com")
+)
+Description: Rule-based, cross‑validated screening workflow for Structural Equation
+    Modeling (SEM). Provides audit trails, caps on row/item removal, careless
+    responding detection, and APA‑style reporting.
 License: MIT + file LICENSE
-URL: https://github.com/yourname/semScreenR
-BugReports: https://github.com/yourname/semScreenR/issues
+URL: https://github.com/MohamedaliS/semScreenR
+BugReports: https://github.com/MohamedaliS/semScreenR/issues
 Depends: R (>= 4.1)
-Imports: 
-    stats, 
-    utils,
-    methods,
-    grDevices
-Suggests: 
-    lavaan (>= 0.6-0),
-    semPlot,
-    gt,
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0),
-    shiny,
-    yaml,
-    officer,
-    flextable
+Imports: stats, utils
+Suggests: lavaan, semPlot, gt, knitr, rmarkdown, testthat (>= 3.0.0)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
-VignetteBuilder: knitr

@@ -1,7 +1,7 @@
 # _pkgdown.yml
 
 # Site meta
-url: https://yourname.github.io/semScreenR
+url: https://MohamedaliS.github.io/semScreenR
 title: semScreenR
 template:
   bootstrap: 5
@@ -28,7 +28,7 @@ navbar:
   components:
     github:
       icon: fab fa-github
-      href: https://github.com/yourname/semScreenR
+      href: https://github.com/MohamedaliS/semScreenR
 
 # Reference organization
 reference:

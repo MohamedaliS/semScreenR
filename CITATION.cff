@@ -3,7 +3,7 @@ title: semScreenR
 message: If you use this software, please cite it as below.
 type: software
 authors:
-  - family-names: Name
-    given-names: Your
+  - family-names: Sharafuddin
+    given-names: Mohamed Ali
 version: 0.0.1
-repository-code: https://github.com/yourname/semScreenR
+repository-code: https://github.com/MohamedaliS/semScreenR
