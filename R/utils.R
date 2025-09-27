@@ -44,15 +44,23 @@ extract_model_variables <- function(model_syntax) {
 }
 
 # Fit a CFA/SEM model safely and return NULL on error
-.safe_fit <- function(model, data, estimator = NULL) {
-  if (!.pkg_available("lavaan")) {
-    message("lavaan is not installed; returning NULL fit.")
+.safe_fit <- function(model, dat) {
+  if (!.pkg_available("lavaan")) return(NULL)
+  
+  model_vars <- extract_model_variables(model)
+  if (nrow(dat) < length(model_vars)) {
+    warning("Skipping fit: data has fewer rows than model variables.")
     return(NULL)
   }
-  args <- list(model = model, data = data, warn = FALSE)
-  if (!is.null(estimator)) args$estimator <- estimator
-  fit <- try(do.call(lavaan::cfa, args), silent = TRUE)
-  if (inherits(fit, "try-error")) return(NULL)
+  
+  args <- list(model = model, data = dat, std.lv = TRUE)
+  
+  fit <- suppressWarnings(try(do.call(lavaan::cfa, args), silent = TRUE))
+  
+  if (inherits(fit, "try-error") || !lavaan::lavInspect(fit, "converged")) {
+    return(NULL)
+  }
+  
   fit
 }
 
