@@ -199,11 +199,16 @@ apa_fit_table <- function(pre, post) {
     }
   })
   
-  # Combine into a data frame
+  # Combine into a data frame with consistent column names
   df <- do.call(rbind, lapply(names(fit_results), function(stage) {
-    cbind(Stage = stage, as.data.frame(t(fit_results[[stage]])))
+    measures_row <- fit_results[[stage]]
+    # Ensure numeric vector
+    v <- as.numeric(unlist(measures_row))
+    names(v) <- names(measures_row)
+    row_df <- data.frame(Stage = stage, as.list(v), stringsAsFactors = FALSE, check.names = FALSE)
+    row_df
   }))
-  
+
   if (.pkg_available("gt")) {
     tb <- gt::gt(df)
     tb <- gt::tab_header(tb, title = "Pre vs Post Screening: Model Fit (APA-style)")
