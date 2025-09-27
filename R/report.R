@@ -90,6 +90,11 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
     paste0("<p>Error generating summary: ", e$message, "</p>")
   })
 
+  # Ensure all components are character before combining
+  summary_html <- as.character(summary_html)
+  table_html <- as.character(table_html)
+  hist_html <- as.character(hist_html)
+
   # Create complete HTML document
   html <- c(
     "<!DOCTYPE html>",
