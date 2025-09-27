@@ -158,36 +158,49 @@ one_line_delta_ascii <- function(pre, post) {
 #' @return data.frame of fit measures
 #' @noRd
 apa_fit_table <- function(pre, post) {
+  # Explicitly check for NULL or invalid fit objects at the beginning
+  if (is.null(pre) || !is_valid_fit(pre)) {
+    pre <- list() # Treat as empty if invalid
+  }
+  if (is.null(post) || !is_valid_fit(post)) {
+    post <- list() # Treat as empty if invalid
+  }
+
   # Check if pre and post are valid lavaan objects or lists of fit measures
   is_valid_fit <- function(fit) {
     (inherits(fit, "lavaan") && lavInspect(fit, "converged")) ||
-      (is.list(fit) && all(c("cfi", "tli", "rmsea", "srmr") %in% names(fit)))
+      (is.list(fit) && !is.null(fit$cfi))
   }
   
-  if (!is_valid_fit(pre) || !is_valid_fit(post)) {
-    stop("Both 'pre' and 'post' must be valid lavaan objects or lists of fit measures.")
+  # If both are empty after validation, return a message
+  if (length(pre) == 0 && length(post) == 0) {
+    return(data.frame(
+      Stage = "Pre- and Post-screening",
+      Note = "Model fitting failed or did not converge for both stages."
+    ))
   }
-  
-  df <- data.frame(
-    Stage = c("Pre-screening", "Post-screening"),
-    CFI   = c(pre$cfi %||% NA,   post$cfi %||% NA),
-    TLI   = c(pre$tli %||% NA,   post$tli %||% NA),
-    RMSEA = c(pre$rmsea %||% NA, post$rmsea %||% NA),
-    `RMSEA 90% CI` = c(
-      if (!is.null(pre$rmsea.ci.lower) && !is.null(pre$rmsea.ci.upper))
-        sprintf("[%.3f, %.3f]", pre$rmsea.ci.lower, pre$rmsea.ci.upper) else NA,
-      if (!is.null(post$rmsea.ci.lower) && !is.null(post$rmsea.ci.upper))
-        sprintf("[%.3f, %.3f]", post$rmsea.ci.lower, post$rmsea.ci.upper) else NA
-    ),
-    SRMR  = c(pre$srmr %||% NA,  post$srmr %||% NA),
-    AIC   = c(pre$aic %||% NA,   post$aic %||% NA),
-    BIC   = c(pre$bic %||% NA,   post$bic %||% NA),
-    Chisq = c(pre$chisq %||% NA, post$chisq %||% NA),
-    df    = c(pre$df %||% NA,    post$df %||% NA),
-    p     = c(pre$pvalue %||% NA,post$pvalue %||% NA),
-    check.names = FALSE
-  )
 
+  fits <- list("Pre-screening" = pre, "Post-screening" = post)
+  
+  # Define measures to extract
+  measures <- c("cfi", "tli", "rmsea", "srmr", "aic", "bic", "chisq", "df", "pvalue", "npar", "nobs")
+  
+  # Extract and combine fit measures
+  fit_results <- lapply(fits, function(fit) {
+    if (length(fit) == 0) {
+      # Return NA for all measures if fit object is empty/invalid
+      setNames(rep(list(NA), length(measures)), measures)
+    } else {
+      # Extract fit measures
+      as.list(lavaan::fitMeasures(fit, measures))
+    }
+  })
+  
+  # Combine into a data frame
+  df <- do.call(rbind, lapply(names(fit_results), function(stage) {
+    cbind(Stage = stage, as.data.frame(t(fit_results[[stage]])))
+  }))
+  
   if (.pkg_available("gt")) {
     tb <- gt::gt(df)
     tb <- gt::tab_header(tb, title = "Pre vs Post Screening: Model Fit (APA-style)")
