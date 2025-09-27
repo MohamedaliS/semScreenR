@@ -1,1 +1,10 @@
-citHeader('Please cite semScreenR as: Your Name (2025). semScreenR (Version 0.3.1).')
+# inst/CITATION
+citHeader("To cite semScreenR, please use:")
+citEntry(
+  entry   = "Software",
+  author  = person(given = "Mohamed Ali", family = "Sharafuddin"),
+  title   = "semScreenR: Deterministic Screening and Validation for SEM",
+  year    = "2025",
+  version = "0.0.1",
+  note    = "https://github.com/MohamedaliS/semScreenR"
+)

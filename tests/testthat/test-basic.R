@@ -9,8 +9,8 @@ test_that("triage_rules presets are valid", {
 test_that("careless_signals returns expected columns", {
   set.seed(123)
   df <- data.frame(x1 = rnorm(30), x2 = rnorm(30), x3 = rnorm(30))
-  sig <- careless_signals(df, items = c("x1","x2","x3"))
-  expect_true(all(c("row_id","longstring","low_irv","mahal","too_fast") %in% names(sig)))
+  sig <- careless_signals(df, items = c("x1", "x2", "x3"))
+  expect_true(all(c("row_id", "longstring", "low_irv", "mahal", "too_fast") %in% names(sig)))
   expect_equal(nrow(sig), nrow(df))
 })
 
@@ -31,11 +31,11 @@ test_that("triage_apply returns expected structure", {
   library(lavaan)
   data("HolzingerSwineford1939", package = "lavaan")
   dat <- HolzingerSwineford1939
-  model <- '
+  model <- "
     visual  =~ x1 + x2 + x3
     textual =~ x4 + x5 + x6
     speed   =~ x7 + x8 + x9
-  '
+  "
   cfg  <- triage_rules("balanced")
   plan <- triage_plan(dat, model, id_cols = "id", protected = character(), config = cfg)
   res  <- triage_apply(dat, model, plan)
@@ -58,7 +58,7 @@ test_that("input validation works correctly", {
   # Test invalid plan
   expect_error(triage_apply(df, model, "not a plan"), "plan must be a semScreen_plan object")
   # Test empty data
-  expect_error(triage_apply(df[0,], model, plan), "dat cannot be empty")
+  expect_error(triage_apply(df[0, ], model, plan), "dat cannot be empty")
 })
 
 test_that("missing variables are detected", {
