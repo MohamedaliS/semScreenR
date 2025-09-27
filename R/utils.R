@@ -190,8 +190,11 @@ apa_fit_table <- function(pre, post) {
     if (length(fit) == 0) {
       # Return NA for all measures if fit object is empty/invalid
       setNames(rep(list(NA), length(measures)), measures)
+    } else if (is.list(fit) && !is.null(fit$cfi)) {
+      # Already a list of fit measures
+      fit[measures]  # Extract only the measures we want
     } else {
-      # Extract fit measures
+      # Extract fit measures from lavaan object
       as.list(lavaan::fitMeasures(fit, measures))
     }
   })
