@@ -1,21 +1,11 @@
-#' Pre/post comparison table (prototype)
-#' @return data.frame with pre/post fit measures
+#' Pre/post comparison table (APA-like)
+#' @param dat data used (not shown; kept for API consistency)
+#' @param model model string (not shown; kept for API consistency)
+#' @param res result from triage_apply()
+#' @return gt table if gt is installed, else data.frame
 #' @export
 sem_compare_table <- function(dat, model, res) {
-  pre  <- res$fit$pre
-  post <- res$fit$post
-  data.frame(
-    Stage = c("Pre-screening","Post-screening"),
-    CFI   = c(pre$cfi %||% NA, post$cfi %||% NA),
-    TLI   = c(pre$tli %||% NA, post$tli %||% NA),
-    RMSEA = c(pre$rmsea %||% NA, post$rmsea %||% NA),
-    SRMR  = c(pre$srmr %||% NA, post$srmr %||% NA),
-    AIC   = c(pre$aic %||% NA, post$aic %||% NA),
-    BIC   = c(pre$bic %||% NA, post$bic %||% NA),
-    stringsAsFactors = FALSE
-  )
+  pre  <- res$fit$pre  %||% list()
+  post <- res$fit$post %||% list()
+  apa_fit_table(pre, post)
 }
-
-#' infix helper for NULL
-#' @keywords internal
-`%||%` <- function(a, b) if (is.null(a)) b else a

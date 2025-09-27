@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: semScreenR
+message: If you use this software, please cite it as below.
+type: software
+authors:
+  - family-names: Name
+    given-names: Your
+version: 0.0.1
+repository-code: https://github.com/yourname/semScreenR

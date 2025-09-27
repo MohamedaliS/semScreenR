@@ -1,0 +1,53 @@
+---
+title: "semScreenR Report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+## Data and model
+
+```{r}
+library(semScreenR)
+if (!requireNamespace("lavaan", quietly = TRUE)) {
+  stop("This report requires the 'lavaan' package. Please install it and re-knit.")
+}
+library(lavaan)
+
+data("HolzingerSwineford1939", package = "lavaan")
+dat <- HolzingerSwineford1939
+
+model <- '
+  visual  =~ x1 + x2 + x3
+  textual =~ x4 + x5 + x6
+  speed   =~ x7 + x8 + x9
+'
+```
+
+## Screening
+
+```{r}
+cfg  <- triage_rules("balanced")
+plan <- triage_plan(dat, model, id_cols = "id", config = cfg)
+res  <- triage_apply(dat, model, plan)
+```
+
+## Pre vs Post Fit (APA-style)
+
+```{r}
+sem_compare_table(dat, model, res)
+```
+
+## Action log
+
+```{r}
+if (length(res$history)) {
+  do.call(rbind, lapply(res$history, function(x) {
+    data.frame(step = x$step, type = x$type, item = x$item %||% NA, note = x$note, stringsAsFactors = FALSE)
+  }))
+} else {
+  "No accepted actions."
+}
+```
