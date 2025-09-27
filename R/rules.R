@@ -67,3 +67,15 @@ triage_rules <- function(
     meta = list(preset = preset)
   )
 }
+
+
+#' Create a triage rule for semScreenR
+#'
+#' @param type type of rule (e.g., "unrealistic_corr", "mahalanobis")
+#' @param name descriptive name for the rule
+#' @param ... additional parameters for the rule (e.g., threshold)
+#' @return a list representing the rule
+#' @export
+triage_rule <- function(type, name, ...) {
+  list(type = type, name = name, params = list(...))
+}

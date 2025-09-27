@@ -10,6 +10,39 @@ NULL
   requireNamespace(pkg, quietly = TRUE)
 }
 
+#' Extract manifest variables from lavaan model syntax
+#' @param model_syntax A character string containing the lavaan model.
+#' @return A character vector of unique manifest variable names.
+#' @noRd
+extract_model_variables <- function(model_syntax) {
+  # Use lavaan's own parser to get the parameter table
+  param_table <- try(lavaan::lavaanify(model_syntax, fixed.x = FALSE), silent = TRUE)
+  if (inherits(param_table, "try-error")) {
+    # Fallback to regex if lavaanify fails (e.g., syntax error)
+    # This is less robust but better than nothing.
+    # It finds words on the right side of =~, ~, or ~~ operators.
+    all_vars <- unlist(strsplit(model_syntax, "\\s*(=~|~|~~)\\s*"))
+    # Remove the latent variable definitions
+    latent_vars <- unique(param_table$lhs[param_table$op == "=~"])
+    manifest_vars <- all_vars[!all_vars %in% latent_vars]
+    # Clean up and get unique names
+    manifest_vars <- gsub("[^[:alnum:]_.]", " ", manifest_vars)
+    manifest_vars <- unlist(strsplit(manifest_vars, "\\s+"))
+    return(unique(manifest_vars[manifest_vars != ""]))
+  }
+  
+  # Get all unique names appearing in the table
+  all_names <- unique(c(param_table$lhs, param_table$rhs))
+  
+  # Identify latent variables (those on the LHS of "=~")
+  latent_vars <- unique(param_table$lhs[param_table$op == "=~"])
+  
+  # Manifest variables are all names that are not latent variables
+  manifest_vars <- all_names[!(all_names %in% latent_vars) & all_names != ""]
+  
+  return(manifest_vars)
+}
+
 # Fit a CFA/SEM model safely and return NULL on error
 .safe_fit <- function(model, data, estimator = NULL) {
   if (!.pkg_available("lavaan")) {
@@ -33,43 +66,6 @@ NULL
   out <- try(lavaan::fitMeasures(fit, keep), silent = TRUE)
   if (inherits(out, "try-error")) return(list())
   as.list(out)
-}
-
-# Extract variable names from lavaan model syntax
-extract_model_variables <- function(model_syntax) {
-  if (is.null(model_syntax) || !is.character(model_syntax) || length(model_syntax) == 0) {
-    return(character(0))
-  }
-  
-  lines <- strsplit(model_syntax, "\n")[[1]]
-  lines <- trimws(lines)
-  lines <- lines[lines != "" & !startsWith(lines, "#")]
-  
-  vars <- character()
-  for (line in lines) {
-    if (grepl("=~", line)) {
-      # Factor definition
-      parts <- strsplit(line, "=~")[[1]]
-      if (length(parts) == 2) {
-        indicators <- trimws(strsplit(parts[2], "\\+")[[1]])
-        vars <- c(vars, indicators)
-      }
-    } else if (grepl("~", line) && !grepl("=~", line)) {
-      # Regression
-      parts <- strsplit(line, "~")[[1]]
-      if (length(parts) == 2) {
-        lhs <- trimws(parts[1])
-        rhs <- trimws(strsplit(parts[2], "\\+")[[1]])
-        vars <- c(vars, lhs, rhs)
-      }
-    }
-  }
-  
-  # Clean variable names (remove coefficients, constraints, etc.)
-  vars <- gsub("\\*.*$", "", vars)  # Remove coefficient specifications
-  vars <- gsub("\\s+", "", vars)   # Remove whitespace
-  vars <- vars[vars != ""]
-  unique(vars)
 }
 
 # Modify model syntax to remove a specific indicator
@@ -151,7 +147,19 @@ one_line_delta_ascii <- function(pre, post) {
 }
 
 # Build an APA-style table (returns a gt table if gt is available, else data.frame)
+#' @return data.frame of fit measures
+#' @noRd
 apa_fit_table <- function(pre, post) {
+  # Check if pre and post are valid lavaan objects or lists of fit measures
+  is_valid_fit <- function(fit) {
+    (inherits(fit, "lavaan") && lavInspect(fit, "converged")) ||
+      (is.list(fit) && all(c("cfi", "tli", "rmsea", "srmr") %in% names(fit)))
+  }
+  
+  if (!is_valid_fit(pre) || !is_valid_fit(post)) {
+    stop("Both 'pre' and 'post' must be valid lavaan objects or lists of fit measures.")
+  }
+  
   df <- data.frame(
     Stage = c("Pre-screening", "Post-screening"),
     CFI   = c(pre$cfi %||% NA,   post$cfi %||% NA),
