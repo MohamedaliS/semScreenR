@@ -35,8 +35,12 @@ ethical_reminder <- function() {
   warnings <- character()
   
   # Check for excessive removal
-  if (!is.null(result$history)) {
-    items_removed <- sum(sapply(result$history, function(x) x$type == "item_drop" && x$kept))
+  if (!is.null(result$history) && length(result$history) > 0) {
+    items_removed <- sum(sapply(result$history, function(x) {
+      is_item_drop <- isTRUE(x$type == "item_drop")
+      is_kept <- isTRUE(x$kept)  # Handle missing or non-logical kept field
+      return(is_item_drop && is_kept)
+    }))
     total_items <- length(extract_model_variables(plan$model))
     removal_rate <- items_removed / max(1, total_items)
     

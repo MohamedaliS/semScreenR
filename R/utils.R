@@ -16,7 +16,7 @@ NULL
     message("lavaan is not installed; returning NULL fit.")
     return(NULL)
   }
-  args <- list(model = model, data = data, silent = TRUE, warn = FALSE)
+  args <- list(model = model, data = data, warn = FALSE)
   if (!is.null(estimator)) args$estimator <- estimator
   fit <- try(do.call(lavaan::cfa, args), silent = TRUE)
   if (inherits(fit, "try-error")) return(NULL)

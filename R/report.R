@@ -20,7 +20,7 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
   tryCatch({
     tb <- apa_fit_table(pre, post)
     if (.pkg_available("gt") && inherits(tb, "gt_tbl")) {
-      table_html <- gt::as_raw_html(tb)
+      table_html <- as.character(gt::as_raw_html(tb))
     } else {
       # Simple fallback table
       df <- as.data.frame(tb)
@@ -69,12 +69,12 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
   
   # Generate summary statistics
   summary_html <- tryCatch({
-    paste0(
+    components <- c(
       "<ul>",
-      "<li><strong>Status:</strong> ", res$status, "</li>",
-      "<li><strong>Original sample size:</strong> ", nrow(dat), "</li>",
-      "<li><strong>Final sample size:</strong> ", nrow(res$data_final), "</li>",
-      "<li><strong>Actions taken:</strong> ", length(res$history), "</li>",
+      paste0("<li><strong>Status:</strong> ", res$status, "</li>"),
+      paste0("<li><strong>Original sample size:</strong> ", nrow(dat), "</li>"),
+      paste0("<li><strong>Final sample size:</strong> ", nrow(res$data_final), "</li>"),
+      paste0("<li><strong>Actions taken:</strong> ", length(res$history), "</li>"),
       if (length(pre) > 0 && !is.null(pre$cfi)) {
         paste0("<li><strong>Pre-screening CFI:</strong> ", 
                sprintf("%.3f", pre$cfi %||% NA), "</li>")
@@ -85,6 +85,7 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
       } else "",
       "</ul>"
     )
+    paste0(components, collapse = "")
   }, error = function(e) {
     paste0("<p>Error generating summary: ", e$message, "</p>")
   })
