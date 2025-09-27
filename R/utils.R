@@ -158,18 +158,18 @@ one_line_delta_ascii <- function(pre, post) {
 #' @return data.frame of fit measures
 #' @noRd
 apa_fit_table <- function(pre, post) {
+  # Check if pre and post are valid lavaan objects or lists of fit measures
+  is_valid_fit <- function(fit) {
+    (inherits(fit, "lavaan") && lavaan::lavInspect(fit, "converged")) ||
+      (is.list(fit) && !is.null(fit$cfi))
+  }
+  
   # Explicitly check for NULL or invalid fit objects at the beginning
   if (is.null(pre) || !is_valid_fit(pre)) {
     pre <- list() # Treat as empty if invalid
   }
   if (is.null(post) || !is_valid_fit(post)) {
     post <- list() # Treat as empty if invalid
-  }
-
-  # Check if pre and post are valid lavaan objects or lists of fit measures
-  is_valid_fit <- function(fit) {
-    (inherits(fit, "lavaan") && lavInspect(fit, "converged")) ||
-      (is.list(fit) && !is.null(fit$cfi))
   }
   
   # If both are empty after validation, return a message
