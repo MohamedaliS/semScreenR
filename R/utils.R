@@ -164,54 +164,48 @@ apa_fit_table <- function(pre, post) {
       (is.list(fit) && !is.null(fit$cfi))
   }
   
-  # Explicitly check for NULL or invalid fit objects at the beginning
-  if (is.null(pre) || !is_valid_fit(pre)) {
-    pre <- list() # Treat as empty if invalid
-  }
-  if (is.null(post) || !is_valid_fit(post)) {
-    post <- list() # Treat as empty if invalid
-  }
+  # Define measures to extract - consistent order
+  measures <- c("cfi", "tli", "rmsea", "srmr", "aic", "bic", "chisq", "df", "pvalue")
   
-  # If both are empty after validation, return a message
-  if (length(pre) == 0 && length(post) == 0) {
-    return(data.frame(
-      Stage = "Pre- and Post-screening",
-      Note = "Model fitting failed or did not converge for both stages."
-    ))
-  }
-
-  # Only include post if valid
-  fits <- list("Pre-screening" = pre)
-  if (length(post) > 0 && is_valid_fit(post)) {
-    fits[["Post-screening"]] <- post
-  }
-  
-  # Define measures to extract
-  measures <- c("cfi", "tli", "rmsea", "srmr", "aic", "bic", "chisq", "df", "pvalue", "npar", "nobs")
-  
-  # Extract and combine fit measures
-  fit_results <- lapply(fits, function(fit) {
-    if (length(fit) == 0) {
+  # Extract measures for one stage, ensuring consistent structure
+  extract_measures <- function(fit, stage_name) {
+    if (is.null(fit) || length(fit) == 0 || !is_valid_fit(fit)) {
       # Return NA for all measures if fit object is empty/invalid
-      setNames(rep(list(NA), length(measures)), measures)
+      result <- setNames(rep(NA, length(measures)), measures)
     } else if (is.list(fit) && !is.null(fit$cfi)) {
-      # Already a list of fit measures
-      fit[measures]  # Extract only the measures we want
+      # Already a list of fit measures - extract what we need
+      result <- sapply(measures, function(m) fit[[m]] %||% NA, simplify = TRUE)
     } else {
       # Extract fit measures from lavaan object
-      as.list(lavaan::fitMeasures(fit, measures))
+      result <- tryCatch({
+        as.list(lavaan::fitMeasures(fit, measures))
+      }, error = function(e) {
+        setNames(rep(NA, length(measures)), measures)
+      })
+      result <- sapply(measures, function(m) result[[m]] %||% NA, simplify = TRUE)
     }
-  })
+    
+    # Create a single-row data frame
+    row_data <- c(Stage = stage_name, as.list(result))
+    data.frame(row_data, stringsAsFactors = FALSE, check.names = FALSE)
+  }
   
-  # Combine into a data frame with consistent column names
-  df <- do.call(rbind, lapply(names(fit_results), function(stage) {
-    measures_row <- fit_results[[stage]]
-    # Ensure numeric vector
-    v <- as.numeric(unlist(measures_row))
-    names(v) <- names(measures_row)
-    row_df <- data.frame(Stage = stage, as.list(v), stringsAsFactors = FALSE, check.names = FALSE)
-    row_df
-  }))
+  # Create consistent rows
+  df_list <- list()
+  df_list[["pre"]] <- extract_measures(pre, "Pre-screening")
+  df_list[["post"]] <- extract_measures(post, "Post-screening")
+  
+  # Combine into final data frame
+  df <- do.call(rbind, df_list)
+  
+  # If both stages have all NA values, return a message
+  if (all(is.na(df[, measures]))) {
+    return(data.frame(
+      Stage = "Pre- and Post-screening",
+      Note = "Model fitting failed or did not converge for both stages.",
+      stringsAsFactors = FALSE
+    ))
+  }
 
   if (.pkg_available("gt")) {
     tb <- gt::gt(df)

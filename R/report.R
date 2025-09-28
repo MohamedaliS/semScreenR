@@ -19,32 +19,105 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
   table_html <- ""
   tryCatch({
     tb <- apa_fit_table(pre, post)
-    if (.pkg_available("gt") && inherits(tb, "gt_tbl")) {
-      table_html <- as.character(gt::as_raw_html(tb))
+    # Force base HTML rendering, skip gt
+    df <- as.data.frame(tb)
+    if (nrow(df) > 0) {
+      rows <- apply(df, 1, function(r) {
+        cells <- sapply(r, function(x) {
+          if (is.na(x)) "—" else format(x, digits = 3)
+        })
+        paste0("<tr>", paste0(sprintf("<td>%s</td>", cells), collapse=""), "</tr>")
+      })
+      header <- paste0("<tr>", paste0(sprintf("<th>%s</th>", names(df)), collapse=""), "</tr>")
+      table_html <- paste0(
+        "<table border='1' style='border-collapse: collapse; width: 100%;'>",
+        header,
+        paste0(rows, collapse=""),
+        "</table>"
+      )
     } else {
-      # Simple fallback table
+      table_html <- "<p>No fit measures available.</p>"
+    }
+  }, error = function(e) {
+    table_html <<- paste0("<p>Error generating fit table: ", e$message, "</p>")
+  })
+
+  # Generate action log
+  hist_html <- ""
+  tryCatch({
+    if (length(res$history) == 0) {
+      hist_html <- "<p>No actions were taken during screening.</p>"
+    } else {
+      hist_items <- sapply(res$history, function(x) {
+        paste0(
+          "<li><strong>Step ", x$step, ":</strong> ",
+          x$type, 
+          if (!is.null(x$item)) paste0(" (", x$item, ")") else "",
+          " - ", x$note %||% "No details",
+          "</li>"
+        )
+      })
+      hist_html <- paste0("<ul>", paste0(hist_items, collapse=""), "</ul>")
+    }
+  }, error = function(e) {
+    hist_html <- paste0("<p>Error generating action log: ", e$message, "</p>")
+  })
+  
+  # Generate summary statistics
+  summary_html <- tryCatch({
+    components <- c(
+      "<ul>",
+      paste0("<li><strong>Status:</strong> ", res$status, "</li>"),
+      paste0("<li><strong>Original sample size:</strong> ", nrow(dat), "</li>"),
+      paste0("<li><strong>Final sample size:</strong> ", nrow(res$data_final), "</li>"),
+      paste0("<li><strong>Actions taken:</strong> ", length(res$history), "</li>"),
+      if (length(pre) > 0 && !is.null(pre$cfi)) {
+        paste0("<li><strong>Pre-screening CFI:</strong> ", 
+               sprintf("%.3f", pre$cfi %||% NA), "</li>")
+      } else "",
+      if (length(post) > 0 && !is.null(post$cfi)) {
+        paste0("<li><strong>Post-screening CFI:</strong> ", 
+               sprintf("%.3f", post$cfi %||% NA), "</li>")
+      } else "",
+      "</ul>"
+    )
+    paste0(components, collapse = "")
+  }, error = function(e) {
+    paste0("<p>Error generating summary: ", e$message, "</p>")
+  })
+
+  # Ensure all components are character before combining
+  summary_html <- as.character(summary_html)
+  table_html <- as.character(table_html)
+  hist_html <- as.character(hist_html)
+
+  # Create complete HTML document
+  html <- c(
+    "<!DOCTYPE html>",
+    try({
+      tb <- apa_fit_table(pre, post)
       df <- as.data.frame(tb)
       if (nrow(df) > 0) {
+        # Build HTML table rows and header
         rows <- apply(df, 1, function(r) {
-          cells <- sapply(r, function(x) {
-            if (is.na(x)) "—" else format(x, digits = 3)
-          })
+          cells <- sapply(r, function(x) if (is.na(x)) "—" else format(x, digits = 3))
           paste0("<tr>", paste0(sprintf("<td>%s</td>", cells), collapse=""), "</tr>")
         })
         header <- paste0("<tr>", paste0(sprintf("<th>%s</th>", names(df)), collapse=""), "</tr>")
         table_html <- paste0(
           "<table border='1' style='border-collapse: collapse; width: 100%;'>",
-          header, 
-          paste0(rows, collapse=""), 
+          header,
+          paste0(rows, collapse=""),
           "</table>"
         )
       } else {
         table_html <- "<p>No fit measures available.</p>"
       }
-    }
-  }, error = function(e) {
-    table_html <<- paste0("<p>Error generating fit table: ", e$message, "</p>")
-  })
+    }, silent = TRUE)
+  # Ensure fallback if any error occurs
+  if (table_html == "" || grepl("Error generating fit table", table_html, fixed = TRUE)) {
+    table_html <- "<p>No fit measures available.</p>"
+  }
 
   # Generate action log
   hist_html <- ""
