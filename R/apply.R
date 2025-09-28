@@ -33,6 +33,28 @@ triage_apply <- function(dat, model, plan, policy = "one_by_one", config = NULL)
   history <- list()
   status <- "completed_no_changes"
   dat_work <- dat
+  
+  # Detect model hierarchy for informed cleaning decisions
+  hierarchy_info <- detect_model_hierarchy(model)
+  if (hierarchy_info$is_hierarchical) {
+    history[[length(history)+1]] <- list(
+      step = length(history)+1,
+      type = "hierarchy_detected",
+      kept = FALSE,
+      note = sprintf("Detected %s-level hierarchical model with %d factors (%d higher-order)", 
+                     hierarchy_info$levels, hierarchy_info$total_factors, 
+                     length(hierarchy_info$higher_order))
+    )
+  }
+  if (hierarchy_info$is_bifactor) {
+    history[[length(history)+1]] <- list(
+      step = length(history)+1,
+      type = "bifactor_detected", 
+      kept = FALSE,
+      note = sprintf("Detected bifactor model with general factor: %s", 
+                     hierarchy_info$general_factor %||% "unknown")
+    )
+  }
 
   # 0) Carless-responding suggested removals (user-supplied through plan$extra_rows)
   if (!is.null(plan$extra_rows) && nrow(plan$extra_rows) > 0) {

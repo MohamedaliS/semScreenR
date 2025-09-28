@@ -23,7 +23,7 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
     if (nrow(df) > 0) {
       # Build HTML table rows and header
       rows <- apply(df, 1, function(r) {
-        cells <- sapply(r, function(x) if (is.na(x)) "—" else format(x, digits = 3))
+        cells <- sapply(r, function(x) if (is.na(x)) "--" else format(x, digits = 3))
         paste0("<tr>", paste0(sprintf("<td>%s</td>", cells), collapse=""), "</tr>")
       })
       header <- paste0("<tr>", paste0(sprintf("<th>%s</th>", names(df)), collapse=""), "</tr>")
@@ -73,11 +73,11 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
       paste0("<li><strong>Actions taken:</strong> ", length(res$history), "</li>"),
       if (length(pre) > 0 && !is.null(pre$cfi)) {
         paste0("<li><strong>Pre-screening CFI:</strong> ", 
-               sprintf("%.3f", pre$cfi %||% NA), "</li>")
+               format_fit_measure(pre$cfi %||% NA, "cfi"), "</li>")
       } else "",
       if (length(post) > 0 && !is.null(post$cfi)) {
         paste0("<li><strong>Post-screening CFI:</strong> ", 
-               sprintf("%.3f", post$cfi %||% NA), "</li>")
+               format_fit_measure(post$cfi %||% NA, "cfi"), "</li>")
       } else "",
       "</ul>"
     )
@@ -86,10 +86,76 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
     paste0("<p>Error generating summary: ", e$message, "</p>")
   })
 
+  # Check for hierarchical model structure and generate conditional section
+  hierarchy_html <- ""
+  tryCatch({
+    # Apply hierarchical model analysis if applicable
+    hierarchy_result <- sem_maybe_hierarchy(dat, model, 
+                                           config = triage_rules("balanced"), 
+                                           estimator = "MLR", 
+                                           validate = TRUE)
+    
+    if (!is.null(hierarchy_result) && hierarchy_result$status == "comparison_complete") {
+      # Generate hierarchical model section HTML
+      hierarchy_html <- paste0(
+        "<h2>Hierarchical Model Analysis</h2>",
+        "<div class='alert alert-info'>",
+        "<strong>Higher-Order Model Detected:</strong> Your model contains hierarchical factor structure. ",
+        "semScreenR automatically compared your higher-order model against a lower-order equivalent.",
+        "</div>",
+        
+        "<h3>Model Comparison</h3>"
+      )
+      
+      # Add comparison table
+      if (!is.null(hierarchy_result$comparison_table)) {
+        comparison_df <- as.data.frame(hierarchy_result$comparison_table)
+        if (nrow(comparison_df) > 0) {
+          comp_rows <- apply(comparison_df, 1, function(r) {
+            cells <- sapply(r, function(x) if (is.na(x)) "--" else as.character(x))
+            paste0("<tr>", paste0(sprintf("<td>%s</td>", cells), collapse=""), "</tr>")
+          })
+          comp_header <- paste0("<tr>", paste0(sprintf("<th>%s</th>", names(comparison_df)), collapse=""), "</tr>")
+          comp_table_html <- paste0(
+            "<table border='1' style='border-collapse: collapse; width: 100%; margin: 10px 0;'>",
+            comp_header,
+            paste0(comp_rows, collapse=""),
+            "</table>"
+          )
+          hierarchy_html <- paste0(hierarchy_html, comp_table_html)
+        }
+      }
+      
+      # Add recommendation
+      hierarchy_html <- paste0(
+        hierarchy_html,
+        "<h3>Recommendation</h3>",
+        "<div class='alert ", 
+        if (hierarchy_result$preferred_model == "higher_order") "alert-success" else "alert-warning",
+        "'>",
+        "<strong>Recommendation:</strong> ", hierarchy_result$recommendation,
+        "</div>",
+        
+        "<h3>Interpretation Guidelines</h3>",
+        "<ul>",
+        "<li><strong>No Material Harm:</strong> ", 
+        if (hierarchy_result$no_material_harm) "[PASS] Passed" else "[FAIL] Failed",
+        " (Higher-order model does not substantially worsen fit)</li>",
+        "<li><strong>Model Complexity:</strong> Higher-order models are more parsimonious but may obscure factor-specific relationships</li>",
+        "<li><strong>Theoretical Fit:</strong> Choose the model that best matches your theoretical framework</li>",
+        "</ul>"
+      )
+    }
+  }, error = function(e) {
+    # If hierarchical analysis fails, continue without it
+    hierarchy_html <- ""
+  })
+
   # Ensure all components are character before combining
   summary_html <- as.character(summary_html)
   table_html <- as.character(table_html)
   hist_html <- as.character(hist_html)
+  hierarchy_html <- as.character(hierarchy_html)
 
   # Create complete HTML document
   html <- c(
@@ -107,6 +173,8 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
     "li { margin: 0.25rem 0; }",
     ".alert { padding: 1rem; margin: 1rem 0; border-radius: 4px; }",
     ".alert-info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }",
+    ".alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }",
+    ".alert-warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }",
     "</style>",
     "</head><body>",
     "<h1>semScreenR Analysis Report</h1>",
@@ -119,6 +187,9 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
     
     "<h2>Action Log</h2>",
     hist_html,
+    
+    # Add hierarchical model section if present
+    if (nchar(hierarchy_html) > 0) hierarchy_html else "",
     
     "<div class='alert alert-info'>",
     "<strong>Note:</strong> This report was generated by semScreenR. ",

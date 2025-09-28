@@ -1,9 +1,8 @@
 citHeader("To cite semScreenR, please use:")
 citEntry(
-  entry   = "Software",
+  entry   = "Manual",
   author  = person(given = "Mohamed Ali", family = "Sharafuddin"),
   title   = "semScreenR: Deterministic Screening and Validation for SEM",
   year    = "2025",
-  version = "0.0.1",
-  note    = "https://github.com/MohamedaliS/semScreenR"
+  note    = "R package version 0.0.1. https://github.com/MohamedaliS/semScreenR"
 )

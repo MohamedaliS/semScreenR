@@ -1,4 +1,5 @@
 #' Ethical safeguards and warnings for semScreenR
+#' @name ethical-guards
 #' @keywords internal
 NULL
 
@@ -6,26 +7,26 @@ NULL
 #' @export
 ethical_reminder <- function() {
   cat("\n")
-  cat("════════════════════════════════════════════════════════════════════════════════\n")
+  cat("================================================================================\n")
   cat("                           ETHICAL USE REMINDER                                 \n") 
-  cat("════════════════════════════════════════════════════════════════════════════════\n")
+  cat("================================================================================\n")
   cat("\n")
   cat("semScreenR promotes ethical research through transparent data screening.\n")
   cat("\n")
   cat("BEFORE using this package:\n")
-  cat("  ✓ Preregister your screening parameters and rationale\n")
-  cat("  ✓ Justify your parameter choices theoretically, not statistically\n")
-  cat("  ✓ Plan to report complete screening procedures and results\n")
+  cat("  * Preregister your screening parameters and rationale\n")
+  cat("  * Justify your parameter choices theoretically, not statistically\n")
+  cat("  * Plan to report complete screening procedures and results\n")
   cat("\n")
   cat("NEVER:\n")
-  cat("  ✗ Adjust parameters based on results\n")
-  cat("  ✗ Run multiple configurations to find 'best' outcome\n")
-  cat("  ✗ Hide screening procedures in your reporting\n")
+  cat("  x Adjust parameters based on results\n")
+  cat("  x Run multiple configurations to find 'best' outcome\n")
+  cat("  x Hide screening procedures in your reporting\n")
   cat("\n")
   cat("For full ethical guidelines: help('ethical_guidelines', package = 'semScreenR')\n")
   cat("To suppress this message: options(semScreenR.ethical_reminder = FALSE)\n")
   cat("\n")
-  cat("════════════════════════════════════════════════════════════════════════════════\n")
+  cat("================================================================================\n")
   cat("\n")
 }
 
@@ -65,7 +66,7 @@ ethical_reminder <- function() {
   }
   
   if (length(warnings) > 0) {
-    cat("\n⚠️  ETHICAL CONCERNS DETECTED:\n")
+    cat("\nWARNING: ETHICAL CONCERNS DETECTED:\n")
     for (w in warnings) {
       cat("   ", w, "\n")
     }
@@ -78,44 +79,44 @@ ethical_reminder <- function() {
 #' @export
 ethical_checklist <- function(result) {
   cat("\n")
-  cat("══════════════════════════════════════════════════════════════════\n")
+  cat("==================================================================\n")
   cat("                    ETHICAL REPORTING CHECKLIST                   \n")
-  cat("══════════════════════════════════════════════════════════════════\n")
+  cat("==================================================================\n")
   cat("\n")
   cat("For transparent reporting, ensure you include:\n")
   cat("\n")
-  cat("□ PREREGISTRATION\n")
-  cat("  □ Link to preregistered screening protocol\n")
-  cat("  □ Any deviations from preregistered plan (with justification)\n")
+  cat("[ ] PREREGISTRATION\n")
+  cat("  [ ] Link to preregistered screening protocol\n")
+  cat("  [ ] Any deviations from preregistered plan (with justification)\n")
   cat("\n")
-  cat("□ METHODS SECTION\n")
-  cat("  □ semScreenR version number:", utils::packageVersion("semScreenR"), "\n")
-  cat("  □ Preset used and justification\n")
-  cat("  □ Any custom parameters and rationale\n")
-  cat("  □ Protected indicators and reasons\n")
+  cat("[ ] METHODS SECTION\n")
+  cat("  [ ] semScreenR version number:", utils::packageVersion("semScreenR"), "\n")
+  cat("  [ ] Preset used and justification\n")
+  cat("  [ ] Any custom parameters and rationale\n")
+  cat("  [ ] Protected indicators and reasons\n")
   cat("\n")
-  cat("□ RESULTS SECTION\n")
+  cat("[ ] RESULTS SECTION\n")
   if (!is.null(result)) {
     total_removed <- length(result$history)
-    cat("  □ Number of screening actions taken:", total_removed, "\n")
-    cat("  □ Sample size change:", nrow(result$data_final), "(report original N too)\n")
+    cat("  [ ] Number of screening actions taken:", total_removed, "\n")
+    cat("  [ ] Sample size change:", nrow(result$data_final), "(report original N too)\n")
     if (total_removed > 0) {
-      cat("  □ Pre-screening fit measures\n")
-      cat("  □ Post-screening fit measures\n")
-      cat("  □ Specific items/cases removed (see action log below)\n")
+      cat("  [ ] Pre-screening fit measures\n")
+      cat("  [ ] Post-screening fit measures\n")
+      cat("  [ ] Specific items/cases removed (see action log below)\n")
     }
   }
-  cat("  □ Sensitivity analyses with alternative parameters\n")
+  cat("  [ ] Sensitivity analyses with alternative parameters\n")
   cat("\n")
-  cat("□ SUPPLEMENTARY MATERIALS\n")
-  cat("  □ Complete semScreenR action log\n")
-  cat("  □ Code used for screening\n")
-  cat("  □ Rationale for all screening decisions\n")
+  cat("[ ] SUPPLEMENTARY MATERIALS\n")
+  cat("  [ ] Complete semScreenR action log\n")
+  cat("  [ ] Code used for screening\n")
+  cat("  [ ] Rationale for all screening decisions\n")
   cat("\n")
-  cat("□ DISCUSSION\n") 
-  cat("  □ Limitations introduced by screening\n")
-  cat("  □ Impact of screening on interpretations\n")
-  cat("  □ Comparison with unscreened results (if meaningful)\n")
+  cat("[ ] DISCUSSION\n") 
+  cat("  [ ] Limitations introduced by screening\n")
+  cat("  [ ] Impact of screening on interpretations\n")
+  cat("  [ ] Comparison with unscreened results (if meaningful)\n")
   cat("\n")
   
   if (!is.null(result) && length(result$history) > 0) {
@@ -132,9 +133,9 @@ ethical_checklist <- function(result) {
   }
   
   cat("\n")
-  cat("══════════════════════════════════════════════════════════════════\n")
+  cat("==================================================================\n")
   cat("Remember: Complete transparency serves scientific integrity.\n")
-  cat("══════════════════════════════════════════════════════════════════\n")
+  cat("==================================================================\n")
   cat("\n")
 }
 

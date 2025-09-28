@@ -57,11 +57,11 @@ test_that("careless signals handles various data types", {
   expect_equal(nrow(signals), 100)
   expect_true(all(c("longstring", "low_irv", "mahal", "too_fast") %in% names(signals)))
   
-  # Test with some straight-lining
+  # Test with some straight-lining - use lower threshold since we only have 3 items
   df_straight <- df
   df_straight[1:5, c("x1", "x2", "x3")] <- 1  # Same response
   
-  signals_straight <- careless_signals(df_straight, items = c("x1", "x2", "x3"))
+  signals_straight <- careless_signals(df_straight, items = c("x1", "x2", "x3"), longstring_k = 3)
   expect_true(any(signals_straight$longstring))
   expect_true(any(signals_straight$low_irv))
 })

@@ -17,6 +17,7 @@ careless_signals <- function(
   df, items, rt_col = NULL,
   longstring_k = 10, irv_min = 0.15, mahal_p = 0.001, fast_q = 0.02
 ) {
+  stopifnot(length(items) > 0)
   stopifnot(all(items %in% names(df)))
   # Standardize items
   Z <- scale(df[, items, drop = FALSE])

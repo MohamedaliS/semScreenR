@@ -87,9 +87,14 @@ test_that("model syntax modification works correctly", {
 
 test_that("variable extraction works correctly", {
   model <- "visual =~ x1 + x2 + x3\ntextual =~ x4 + x5 + x6\nvisual ~ textual"
-  vars <- semScreenR:::extract_model_variables(model)
-  expected <- c("x1", "x2", "x3", "x4", "x5", "x6", "visual", "textual")
-  expect_true(all(expected %in% vars))
+  # Test manifest variables only (for data validation)
+  vars_manifest <- semScreenR:::extract_model_variables(model)
+  expected_manifest <- c("x1", "x2", "x3", "x4", "x5", "x6")
+  expect_true(all(expected_manifest %in% vars_manifest))
+  # Test all variables (including latent)
+  vars_all <- semScreenR:::extract_all_model_variables(model)
+  expected_all <- c("x1", "x2", "x3", "x4", "x5", "x6", "visual", "textual")
+  expect_true(all(expected_all %in% vars_all))
   # Test with coefficient specifications
   model_coef <- "visual =~ 0.5*x1 + x2 + 1.2*x3"
   vars_coef <- semScreenR:::extract_model_variables(model_coef)
