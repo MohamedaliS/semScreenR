@@ -2,6 +2,8 @@ Package: semScreenR
 Type: Package
 Title: Deterministic Screening and Validation for SEM
 Version: 0.0.1
+Author: Mohamed Ali S
+Maintainer: Mohamed Ali S <you@example.com>
 Authors@R: c(person(given = "Mohamed Ali", family = "S", role = c("aut","cre"), email = "you@example.com"))
 Description: Rule-based, cross-validated screening workflow for Structural Equation
     Modeling (SEM). Provides audit trails, caps on row/item removal, careless

@@ -1,0 +1,12 @@
+---
+title: "semScreenR: Deterministic Screening and Validation for SEM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{semScreenR: Deterministic Screening and Validation for SEM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```

@@ -43,10 +43,9 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
   }
 
   # Generate action log
-  hist_html <- ""
-  tryCatch({
+  hist_html <- tryCatch({
     if (length(res$history) == 0) {
-      hist_html <- "<p>No actions were taken during screening.</p>"
+      "<p>No actions were taken during screening.</p>"
     } else {
       hist_items <- sapply(res$history, function(x) {
         paste0(
@@ -57,10 +56,10 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
           "</li>"
         )
       })
-      hist_html <- paste0("<ul>", paste0(hist_items, collapse=""), "</ul>")
+      paste0("<ul>", paste0(hist_items, collapse=""), "</ul>")
     }
   }, error = function(e) {
-    hist_html <- paste0("<p>Error generating action log: ", e$message, "</p>")
+    paste0("<p>Error generating action log: ", e$message, "</p>")
   })
   
   # Generate summary statistics
@@ -87,8 +86,7 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
   })
 
   # Check for hierarchical model structure and generate conditional section
-  hierarchy_html <- ""
-  tryCatch({
+  hierarchy_html <- tryCatch({
     # Apply hierarchical model analysis if applicable
     hierarchy_result <- sem_maybe_hierarchy(dat, model, 
                                            config = triage_rules("balanced"), 
@@ -97,7 +95,7 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
     
     if (!is.null(hierarchy_result) && hierarchy_result$status == "comparison_complete") {
       # Generate hierarchical model section HTML
-      hierarchy_html <- paste0(
+      section_html <- paste0(
         "<h2>Hierarchical Model Analysis</h2>",
         "<div class='alert alert-info'>",
         "<strong>Higher-Order Model Detected:</strong> Your model contains hierarchical factor structure. ",
@@ -122,13 +120,13 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
             paste0(comp_rows, collapse=""),
             "</table>"
           )
-          hierarchy_html <- paste0(hierarchy_html, comp_table_html)
+          section_html <- paste0(section_html, comp_table_html)
         }
       }
       
       # Add recommendation
-      hierarchy_html <- paste0(
-        hierarchy_html,
+      paste0(
+        section_html,
         "<h3>Recommendation</h3>",
         "<div class='alert ", 
         if (hierarchy_result$preferred_model == "higher_order") "alert-success" else "alert-warning",
@@ -145,10 +143,12 @@ export_sem_report <- function(dat, model, res, file = "sem_report.html") {
         "<li><strong>Theoretical Fit:</strong> Choose the model that best matches your theoretical framework</li>",
         "</ul>"
       )
+    } else {
+      ""
     }
   }, error = function(e) {
     # If hierarchical analysis fails, continue without it
-    hierarchy_html <- ""
+    ""
   })
 
   # Ensure all components are character before combining

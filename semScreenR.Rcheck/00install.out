@@ -1,0 +1,58 @@
+* installing *source* package ‘semScreenR’ ...
+** this is package ‘semScreenR’ version ‘0.0.1’
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+
+================================================================================
+                           ETHICAL USE REMINDER                                 
+================================================================================
+
+semScreenR promotes ethical research through transparent data screening.
+
+BEFORE using this package:
+  * Preregister your screening parameters and rationale
+  * Justify your parameter choices theoretically, not statistically
+  * Plan to report complete screening procedures and results
+
+NEVER:
+  x Adjust parameters based on results
+  x Run multiple configurations to find 'best' outcome
+  x Hide screening procedures in your reporting
+
+For full ethical guidelines: help('ethical_guidelines', package = 'semScreenR')
+To suppress this message: options(semScreenR.ethical_reminder = FALSE)
+
+================================================================================
+
+** testing if installed package can be loaded from final location
+
+================================================================================
+                           ETHICAL USE REMINDER                                 
+================================================================================
+
+semScreenR promotes ethical research through transparent data screening.
+
+BEFORE using this package:
+  * Preregister your screening parameters and rationale
+  * Justify your parameter choices theoretically, not statistically
+  * Plan to report complete screening procedures and results
+
+NEVER:
+  x Adjust parameters based on results
+  x Run multiple configurations to find 'best' outcome
+  x Hide screening procedures in your reporting
+
+For full ethical guidelines: help('ethical_guidelines', package = 'semScreenR')
+To suppress this message: options(semScreenR.ethical_reminder = FALSE)
+
+================================================================================
+
+** testing if installed package keeps a record of temporary installation path
+* DONE (semScreenR)

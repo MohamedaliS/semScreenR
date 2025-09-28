@@ -1,0 +1,23 @@
+Package: semScreenR
+Type: Package
+Title: Deterministic Screening and Validation for SEM
+Version: 0.0.1
+Authors@R: c(person(given = "Mohamed Ali", family = "S", role = c("aut","cre"), email = "you@example.com"))
+Description: Rule-based, cross-validated screening workflow for Structural Equation
+    Modeling (SEM). Provides audit trails, caps on row/item removal, careless
+    responding detection, and APA-style reporting.
+License: MIT + file LICENSE
+URL: https://github.com/MohamedaliS/semScreenR
+BugReports: https://github.com/MohamedaliS/semScreenR/issues
+Depends: R (>= 4.1)
+Imports: stats, utils
+Suggests: lavaan, semPlot, gt, officer, flextable, yaml, knitr,
+        rmarkdown, testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Encoding: UTF-8
+RoxygenNote: 7.3.3
+NeedsCompilation: no
+Packaged: 2025-09-28 07:07:37 UTC; maxx
+Author: Mohamed Ali S [aut, cre]
+Maintainer: Mohamed Ali S <you@example.com>
+Built: R 4.5.1; ; 2025-09-28 07:07:40 UTC; unix

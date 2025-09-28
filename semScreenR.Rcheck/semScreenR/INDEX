@@ -1,0 +1,20 @@
+apa_fit_table           APA-style fit comparison table
+careless_signals        Compute multiple careless-responding signals
+config_from_yaml        Load configuration from YAML file
+ethical_checklist       Generate ethical reporting checklist
+ethical_reminder        Display ethical warning before first use
+export_sem_report       Export a compact HTML report with pre/post fit
+                        and action log
+is_higher_order_model   Detect higher-order model structure
+lower_order_equivalent
+                        Create lower-order equivalent model
+one_line_delta          One-line delta summary
+sem_compare_table       Pre/post comparison table (APA-like)
+sem_hierarchy_compare   Compare hierarchical vs lower-order models
+sem_maybe_hierarchy     Conditional hierarchical model analysis
+sem_paths_prepost       Draw pre and post path diagrams and save to
+                        file
+triage_apply            Apply a triage plan
+triage_plan             Create a triage plan
+triage_rule             Create a triage rule for semScreenR
+triage_rules            Create triage rules for semScreenR

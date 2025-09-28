@@ -1,0 +1,49 @@
+
+R version 4.5.1 (2025-06-13) -- "Great Square Root"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(testthat)
+> library(semScreenR)
+
+================================================================================
+                           ETHICAL USE REMINDER                                 
+================================================================================
+
+semScreenR promotes ethical research through transparent data screening.
+
+BEFORE using this package:
+  * Preregister your screening parameters and rationale
+  * Justify your parameter choices theoretically, not statistically
+  * Plan to report complete screening procedures and results
+
+NEVER:
+  x Adjust parameters based on results
+  x Run multiple configurations to find 'best' outcome
+  x Hide screening procedures in your reporting
+
+For full ethical guidelines: help('ethical_guidelines', package = 'semScreenR')
+To suppress this message: options(semScreenR.ethical_reminder = FALSE)
+
+================================================================================
+
+> test_check("semScreenR")
+[ FAIL 0 | WARN 4 | SKIP 0 | PASS 76 ]
+
+[ FAIL 0 | WARN 4 | SKIP 0 | PASS 76 ]
+> 
+> proc.time()
+   user  system elapsed 
+ 27.515   0.208  27.724 

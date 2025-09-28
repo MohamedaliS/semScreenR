@@ -13,6 +13,12 @@
 #' @param plan semScreen_plan
 #' @param policy reserved for future strategies
 #' @param config optional override for plan$config
+
+# Declare global variables to avoid R CMD check warnings
+# These are column names from lavaan functions
+if(getRversion() >= "2.15.1") {
+  utils::globalVariables(c("op", "abs_est"))
+}
 #' @return semScreen_result list with fields: status, data_final, history, fit
 #' @export
 triage_apply <- function(dat, model, plan, policy = "one_by_one", config = NULL) {
@@ -150,8 +156,8 @@ triage_apply <- function(dat, model, plan, policy = "one_by_one", config = NULL)
       train <- data_in[idx != fold, , drop = FALSE]
       valid <- data_in[idx == fold, , drop = FALSE]
       
-      # Check if we have enough observations in this fold
-      if (nrow(valid) < 10) next  # Skip very small folds
+      # Check if we have enough observations in both folds
+      if (nrow(valid) < 10 || nrow(train) < 20) next  # Skip very small folds
       
       # Pre-fit on validation fold with original model
       f_pre  <- .safe_fit(model_in, valid)
@@ -271,7 +277,8 @@ triage_apply <- function(dat, model, plan, policy = "one_by_one", config = NULL)
           type = "item_drop_rejected",
           item = candidate_item,
           kept = FALSE,
-          note = sprintf("Item '%s' rejected - failed k-fold validation", candidate_item)
+          note = sprintf("Item '%s' rejected - failed k-fold validation", candidate_item),
+          validation_details = val_details
         )
         break
       }

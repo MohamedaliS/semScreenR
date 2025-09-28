@@ -596,7 +596,7 @@ lower_order_equivalent <- function(model, dat = NULL) {
   
   # Add other relations (regressions, correlations)
   if (nrow(other_relations) > 0) {
-    for (i in 1:nrow(other_relations)) {
+    for (i in seq_len(nrow(other_relations))) {
       rel <- other_relations[i, ]
       if (rel$op == "~") {
         lower_order_syntax <- c(lower_order_syntax, paste0("  ", rel$lhs, " ~ ", rel$rhs))

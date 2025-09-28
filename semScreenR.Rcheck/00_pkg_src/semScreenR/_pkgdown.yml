@@ -1,0 +1,58 @@
+# _pkgdown.yml
+
+# Site meta
+url: https://MohamedaliS.github.io/semScreenR
+title: semScreenR
+template:
+  bootstrap: 5
+
+# Where to put the built site
+destination: docs
+
+# Index page
+home:
+  title: Deterministic Screening and Validation for SEM
+  links:
+    - text: Get started
+      href: articles/semScreenR.html
+    - text: Reference
+      href: reference/index.html
+    - text: Changelog
+      href: news/index.html
+
+# Navbar
+navbar:
+  structure:
+    left:  [home, reference, articles, news]
+    right: [github]
+  components:
+    github:
+      icon: fab fa-github
+      href: https://github.com/MohamedaliS/semScreenR
+
+# Reference organization
+reference:
+  - title: Workflow
+    contents:
+      - triage_rules
+      - triage_plan
+      - triage_apply
+  - title: Reporting
+    contents:
+      - sem_compare_table
+      - export_sem_report
+      - sem_paths_prepost
+      - one_line_delta
+  - title: Diagnostics
+    contents:
+      - careless_signals
+
+# Articles (vignettes)
+articles:
+  - title: Tutorials
+    contents:
+      - semScreenR
+
+# Development badge section (optional)
+development:
+  mode: auto

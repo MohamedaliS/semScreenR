@@ -1,0 +1,101 @@
+* using log directory ‘/home/maxx/Documents/GitHub/semScreenR/semScreenR.Rcheck’
+* using R version 4.5.1 (2025-06-13)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+    GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+* running under: Ubuntu 24.04.3 LTS
+* using session charset: UTF-8
+* using options ‘--no-manual --no-build-vignettes’
+* checking for file ‘semScreenR/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘semScreenR’ version ‘0.0.1’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘semScreenR’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Licence stub is invalid DCF.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... NOTE
+Found the following CITATION file in a non-standard place:
+  CITATION.cff
+Most likely ‘inst/CITATION’ should be used instead.
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking whether startup messages can be suppressed ... NOTE
+
+================================================================================
+                           ETHICAL USE REMINDER                                 
+================================================================================
+
+semScreenR promotes ethical research through transparent data screening.
+
+BEFORE using this package:
+  * Preregister your screening parameters and rationale
+  * Justify your parameter choices theoretically, not statistically
+  * Plan to report complete screening procedures and results
+
+NEVER:
+  x Adjust parameters based on results
+  x Run multiple configurations to find 'best' outcome
+  x Hide screening procedures in your reporting
+
+For full ethical guidelines: help('ethical_guidelines', package = 'semScreenR')
+To suppress this message: options(semScreenR.ethical_reminder = FALSE)
+
+================================================================================
+
+
+It looks like this package (or a package it requires) has a startup
+message which cannot be suppressed: see ?packageStartupMessage.
+* checking dependencies in R code ... WARNING
+Missing or unexported objects:
+  ‘gt::as_flex_table’ ‘officer::body_add_flextable’
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking files in ‘vignettes’ ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  ‘ethical-use.Rmd’ ‘semScreenR.Rmd’
+* checking examples ... NONE
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘testthat.R’
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes ... WARNING
+Directory 'inst/doc' does not exist.
+Package vignettes without corresponding single PDF/HTML:
+  ‘ethical-use.Rmd’
+  ‘semScreenR.Rmd’
+* checking running R code from vignettes ... OK
+  ‘ethical-use.Rmd’ using ‘UTF-8’... OK
+  ‘semScreenR.Rmd’ using ‘UTF-8’... OK
+* checking re-building of vignette outputs ... SKIPPED
+* DONE
+Status: 3 WARNINGs, 3 NOTEs
